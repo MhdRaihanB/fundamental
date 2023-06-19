@@ -248,33 +248,74 @@ void CariData()
     fclose(fp); // menutup file
 }
 
+void Bayar(int tipe)
+{
+    int line=0, bayar, del;
+    char ftemp[] = "temp.txt";
+
+    FILE *fp, *fj;
+    fp = fopen(filename,"r"); // membuka file dalam mode membaca
+
+    printf("Data Utang/Piutang Sebelum Pembayaran:\n");
+    TampilData(tipe); // Menampilkan data sebelum pembayaran
+
+    printf("Masukkan nomor barisan dari data yang ingin dibayar: ");
+    scanf("%d", &del);
+
+    fj = fopen(ftemp, "w"); // membuat file sementara dalam  mode menulis
+
+    while(fscanf(fp, "%d %d %d %s %d %d %d %d", &data.tgl, &data.bln, &data.thn, data.nama, &data.jml, &data.dtgl, &data.dbln, &data.dthn)==8)
+    {
+        line++;
+        // Mengcopy semua data dari file asli ke file sementara kecuali barisan yang dipilih pengguna
+        if(line != del)
+            fprintf(fj, "%d %d %d %s %d %d %d %d\n", data.tgl, data.bln, data.thn, data.nama, data.jml, data.dtgl, data.dbln, data.dthn);
+        else
+        {
+            printf("Masukkan jumlah yang ingin dibayar: ");
+            scanf("%d", &bayar);
+            // Mengurangi jumlah utang/piutang dengan jumlah yang dibayar
+            data.jml -= bayar;
+            // Jika jumlah utang/piutang sudah lunas, data tidak perlu dicatat kembali
+            if(data.jml > 0)
+                fprintf(fj, "%d %d %d %s %d %d %d %d\n", data.tgl, data.bln, data.thn, data.nama, data.jml, data.dtgl, data.dbln, data.dthn);
+        }
+    }
+    fclose(fp); // menutup file
+    fclose(fj); // menutup file
+    remove(filename); // Menghapus file asli
+    rename(ftemp, filename); // Mengganti nama file sementara menjadi file asli
+}
+
 int main()
 {
     int pilih, menu;
     printf("\t===== LOAN MANAGER =====\n"
-           "Masukkan pilihan: (1)Registrasi (2)Login\n> ");
+           "Masukkan pilihan:\n(1)Registrasi\n(2)Login\n"
+           "Pilihan Anda : ");
     scanf("%d", &pilih);
     Masuk(pilih);
 
     MainMenu:
     printf("MENU UTAMA:\n(1)KELOLA UTANG\n(2)KELOLA PIUTANG\n(3)KELUAR\n> ");
     scanf("%d", &pilih);
-    while(pilih != 3)
+    while(pilih <= 2)
     {
         if(pilih == 1)
         {
             strcat(filename, "UTANG.txt"); // membuat nama file khusus utang
-            printf("Masukkan pilihan:\n(1)Catat Utang (2)Daftar Utang (3)Mengurutkan Data Utang\n"
-                   "(4)Mencari Data Utang (5)Menghapus Data Utang (6)Kembali ke Menu Utama\n> ");
+            printf("Masukkan pilihan:\n(1)Catat Utang\n(2)Daftar Utang\n(3)Bayar Utang\n"
+                   "(4)Mengurutkan Data Utang\n(5)Mencari Data Utang\n(6)Menghapus Data Utang\n(7)Kembali ke Menu Utama\n> ");
             scanf("%d", &menu);
             switch(menu)
             {
                 case 1: IsiData(pilih); break;
                 case 2: TampilData(pilih); break;
-                case 3: UrutData(); break;
-                case 4: CariData(); break;
-                case 5: HapusData(); break;
-                case 6: filename[strlen(filename)-9] = 0; goto MainMenu; // menghapus UTANG.txt dari filename dan kembali ke menu utama
+                case 3: Bayar(pilih); break;
+                case 4: UrutData(); break;
+                case 5: CariData(); break;
+                case 6: HapusData(); break;
+                case 7: filename[strlen(filename)-9] = 0; goto MainMenu; // menghapus UTANG.txt dari filename dan kembali ke menu utama
             }
             filename[strlen(filename)-9] = 0; // menghapus UTANG.txt dari filename
         }
@@ -288,10 +329,11 @@ int main()
             {
                 case 1: IsiData(pilih); break;
                 case 2: TampilData(pilih); break;
-                case 3: UrutData(); break;
-                case 4: CariData(); break;
-                case 5: HapusData(); break;
-                case 6: filename[strlen(filename)-11] = 0; goto MainMenu; // menghapus PIUTANG.txt dari filename dan kembali ke menu utama
+                case 3: Bayar(pilih); break;
+                case 4: UrutData(); break;
+                case 5: CariData(); break;
+                case 6: HapusData(); break;
+                case 7: filename[strlen(filename)-11] = 0; goto MainMenu; // menghapus PIUTANG.txt dari filename dan kembali ke menu utama
             }
             filename[strlen(filename)-11] = 0; // menghapus PIUTANG.txt dari filename
         }
