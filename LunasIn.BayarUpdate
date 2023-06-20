@@ -94,12 +94,12 @@ void Masuk(int mode)
 void IsiData(int tipe)
 {
     char ulang;
+    system("cls");
     fp = fopen(filename, "a+"); // membuka file dalam mode membaca dan menulis
     // Membaca input data utang/piutang dari pengguna
     do
     {
         if(tipe==1){
-            system("cls");
             printf("=============PENCATATAN HUTANG=============\n");
             printf("Masukkan tanggal peminjaman (DD MM YYYY): ");
             scanf("%d %d %d", &data.tgl, &data.bln, &data.thn);
@@ -109,11 +109,10 @@ void IsiData(int tipe)
             fflush(stdin);
             printf("Masukkan jumlah uang: ");
             scanf("%d", &data.jml);
-            printf("Masukkan tenggat waktu pelunasan (DD MMYYYY): ");
+            printf("Masukkan tenggat waktu pelunasan (DD MM YYYY): ");
             scanf("%d %d %d", &data.dtgl, &data.dbln, &data.dthn);
         }
         else {
-            system("cls");
             printf("=============PENCATATAN PIUTANG=============\n");
             printf("Masukkan tanggal peminjaman (DD MM YYYY): ");
             scanf("%d %d %d", &data.tgl, &data.bln, &data.thn);
@@ -141,7 +140,7 @@ void TampilData(int tipe)
     i=0;
 
     fp = fopen(filename, "r"); // membuka file dalam mode membaca
-
+    data:
     system("cls");
     printf("=================MENAMPILKAN DATA=================\n");
     if(tipe==1) printf("No.\tTanggal Peminjaman\tNama Pemberi Uang\tJumlah Uang\tTenggat Waktu Pelunasan\n");
@@ -158,7 +157,7 @@ void TampilData(int tipe)
 
 void UrutData()
 {
-    int opsi, size, ch=0;
+    int tipe,opsi, size, ch=0;
     i=0;
 
     fp = fopen(filename,"r"); // membuka file dalam mode membaca
@@ -180,7 +179,7 @@ void UrutData()
     if (opsi==1)
     {
         system("cls");
-        printf("==========PENGURUTAN DATA BERDASARKAN JUMLAH UANG==========\n");
+        printf("==========DATA TELAH DIURUTKAN BERDASARKAN JUMLAH UANG==========\n");
         for(i=1;i<size;++i)
             for(j=0;j<size-i;j++)
                 if(Adata[j+1].jml < Adata[j].jml)
@@ -195,7 +194,7 @@ void UrutData()
     {
         // mengurutkan data berdasarkan tanggal
         system("cls");
-        printf("========PENGURUTAN DATA BERDASARKAN WAKTU PELUNASAN========\n");
+        printf("========DATA TELAH DIURUTKAN BERDASARKAN TENGGAT WAKTU PELUNASAN========\n");
         for(i=1;i<size;++i)
             for(j=0;j<size-i;j++)
                 if(Adata[j+1].dtgl < Adata[j].dtgl)
@@ -223,14 +222,25 @@ void UrutData()
                     Adata[j+1]=temp;
                 }
     }
-
     fclose(fp); // menutup file
+
 
     fp = fopen(filename,"w"); // membuka file dalam mode menulis
     // menulis data yang telah diurutkan kedalam file utang/piutang
     for(i=0; i<size; i++)
     {
         fprintf(fp, "%d %d %d %s %d %d %d %d\n", Adata[i].tgl, Adata[i].bln, Adata[i].thn, Adata[i].nama, Adata[i].jml, Adata[i].dtgl, Adata[i].dbln, Adata[i].dthn);
+    }
+
+    fclose(fp); // menutup file
+    fp = fopen(filename, "r"); // membuka file dalam mode membaca
+    if(tipe==1) printf("No.\tTanggal Peminjaman\tNama Pemberi Uang\tJumlah Uang\tTenggat Waktu Pelunasan\n");
+    else printf("No.\tTanggal Peminjaman\tNama Peminjam Uang\tJumlah Uang\tTenggat Waktu Pelunasan\n");
+    // membaca file utang/piutang dan menampilkan seluruh isinya
+    while(fscanf(fp, "%d %d %d %s %d %d %d %d", &data.tgl, &data.bln, &data.thn, data.nama, &data.jml, &data.dtgl, &data.dbln, &data.dthn)==8)
+    {
+        i++;
+        printf("%-8d%02d/%02d/%-18d%-24s%-16d%02d/%02d/%d\n", i, data.tgl, data.bln, data.thn, data.nama, data.jml, data.dtgl, data.dbln, data.dthn);
     }
 
     fclose(fp); // menutup file
