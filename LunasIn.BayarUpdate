@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#Include <string.h>
+#include <string.h>
 
 struct datautang
 {
@@ -98,18 +98,34 @@ void IsiData(int tipe)
     // Membaca input data utang/piutang dari pengguna
     do
     {
-        printf("============================================\n"
-               "Masukkan tanggal peminjaman (DD_MM_YYYY): ");
-        scanf("%d %d %d", &data.tgl, &data.bln, &data.thn);
-        fflush(stdin);
-        if(tipe==1) printf("Masukkan nama pemberi uang: ");
-        else printf("Masukkan nama peminjam uang: ");
-        scanf("%s", data.nama);
-        fflush(stdin);
-        printf("Masukkan jumlah uang: ");
-        scanf("%d", &data.jml);
-        printf("Masukkan tenggat waktu pelunasan (DD_MM_YYYY): ");
-        scanf("%d %d %d", &data.dtgl, &data.dbln, &data.dthn);
+        if(tipe==1){
+            system("cls");
+            printf("=============PENCATATAN HUTANG=============\n");
+            printf("Masukkan tanggal peminjaman (DD MM YYYY): ");
+            scanf("%d %d %d", &data.tgl, &data.bln, &data.thn);
+            fflush(stdin);
+            printf("Masukkan nama pemberi uang: ");
+            scanf("%s", data.nama);
+            fflush(stdin);
+            printf("Masukkan jumlah uang: ");
+            scanf("%d", &data.jml);
+            printf("Masukkan tenggat waktu pelunasan (DD MMYYYY): ");
+            scanf("%d %d %d", &data.dtgl, &data.dbln, &data.dthn);
+        }
+        else {
+            system("cls");
+            printf("=============PENCATATAN PIUTANG=============\n");
+            printf("Masukkan tanggal peminjaman (DD MM YYYY): ");
+            scanf("%d %d %d", &data.tgl, &data.bln, &data.thn);
+            fflush(stdin);
+            printf("Masukkan nama peminjam: ");
+            scanf("%s", data.nama);
+            fflush(stdin);
+            printf("Masukkan jumlah uang: ");
+            scanf("%d", &data.jml);
+            printf("Masukkan tenggat waktu pelunasan (DD MM YYYY): ");
+            scanf("%d %d %d", &data.dtgl, &data.dbln, &data.dthn);
+        }
         // Mencatat hasil input dari pengguna kedalam file utang/piutang
         fprintf(fp, "%d %d %d %s %d %d %d %d\n", data.tgl, data.bln, data.thn, data.nama, data.jml, data.dtgl, data.dbln, data.dthn);
         fflush(stdin);
@@ -126,7 +142,8 @@ void TampilData(int tipe)
 
     fp = fopen(filename, "r"); // membuka file dalam mode membaca
 
-    printf("==============================================================================================\n");
+    system("cls");
+    printf("=================MENAMPILKAN DATA=================\n");
     if(tipe==1) printf("No.\tTanggal Peminjaman\tNama Pemberi Uang\tJumlah Uang\tTenggat Waktu Pelunasan\n");
     else printf("No.\tTanggal Peminjaman\tNama Peminjam Uang\tJumlah Uang\tTenggat Waktu Pelunasan\n");
     // membaca file utang/piutang dan menampilkan seluruh isinya
@@ -162,6 +179,8 @@ void UrutData()
     // mengurutkan data utang/piutang berdasarkan jumlah uang dengan bubble sort secara ascending
     if (opsi==1)
     {
+        system("cls");
+        printf("==========PENGURUTAN DATA BERDASARKAN JUMLAH UANG==========\n");
         for(i=1;i<size;++i)
             for(j=0;j<size-i;j++)
                 if(Adata[j+1].jml < Adata[j].jml)
@@ -175,6 +194,8 @@ void UrutData()
     else if (opsi==2)
     {
         // mengurutkan data berdasarkan tanggal
+        system("cls");
+        printf("========PENGURUTAN DATA BERDASARKAN WAKTU PELUNASAN========\n");
         for(i=1;i<size;++i)
             for(j=0;j<size-i;j++)
                 if(Adata[j+1].dtgl < Adata[j].dtgl)
@@ -278,7 +299,7 @@ void Bayar(int tipe)
     char ftemp[] = "temp.txt";
 
     FILE *fj;
-    
+
     printf("======================================\n"
            "Data Utang/Piutang Sebelum Pembayaran:\n");
     TampilData(tipe); // Menampilkan data sebelum pembayaran
