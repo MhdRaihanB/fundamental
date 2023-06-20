@@ -155,7 +155,7 @@ void UrutData()
     size=i-1;
 
     printf("=================================================================\n"
-           "Urutkan berdasarkan:\n(1) Jumlah uang\n(2)Tenggat waktu pelunasan");
+           "Urutkan berdasarkan:\n(1) Jumlah uang\n(2) Tenggat waktu pelunasan\n");
     printf("Pilihan Anda : ");
     scanf("%d", &opsi);
     // mengurutkan data utang/piutang berdasarkan jumlah uang dengan bubble sort secara ascending
