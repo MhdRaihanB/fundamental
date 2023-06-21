@@ -344,6 +344,51 @@ void Bayar(int tipe)
     rename(ftemp, filename); // Mengganti nama file sementara menjadi file asli
 }
 
+void SimulasiBunga(int tipe){
+    char cari[20];
+    int found=0,masaPinjam,tahun,bunga;
+    float bungaTahunan;
+
+    printf("===== SIMULASI BUNGA =====\n");
+    TampilData(tipe);
+    printf("=================================\n"
+           "Masukkan nama yang ingin dicari: ");
+    scanf("%s", cari);
+
+    fp = fopen(filename,"r"); // membuka file dalam mode membaca
+    // membaca file utang/piutang per baris sampai habis
+    while(fscanf(fp, "%d %d %d %s %d %d %d %d", &data.tgl, &data.bln, &data.thn, data.nama, &data.jml, &data.dtgl, &data.dbln, &data.dthn)==8)
+    {
+        if (strcmp(cari, data.nama) == 0) // mencari barisan data berdasarkan nama yang diinput pengguna
+        {
+            printf("Masukan suku bunga per tahun : ");
+            scanf("%f",&bungaTahunan); //input nilai bunga per tahun
+            getchar();
+            tahun=data.dthn-data.thn; //mencari nilai tahun
+            if (tahun!=0)
+            {
+                masaPinjam=data.dbln-data.bln+(12*tahun); //menghitunng masa pinjam
+                bunga=data.jml*((bungaTahunan/100)/12)*masaPinjam; //menghitung bunga dari pinjaman
+                printf("\nBunga pinjaman anda adalah Rp.%d.\n",bunga);
+                printf("Total Angsuran anda adalah Rp.%d.\n",data.jml+bunga);
+            } else {
+                masaPinjam=data.dbln-data.bln;
+                bunga=data.jml*((bungaTahunan/100)/12)*masaPinjam;
+                printf("\nBunga pinjaman anda adalah Rp.%d.\n",bunga);
+                printf("Total Angsuran anda adalah Rp.%d.\n",data.jml+bunga);
+            }
+            found=1;
+        }
+    }
+
+    if (found==0) // menampilkan pesan bila nama tidak ditemukan
+        printf("=====================\n"
+               "Data tidak ditemukan!\n"
+               "=====================\n");
+
+    fclose(fp); // menutup file
+}
+
 int main()
 {
     int pilih, menu;
@@ -365,7 +410,7 @@ int main()
             strcat(filename, "UTANG.txt"); // membuat nama file khusus utang
             printf("============================================\n"
                    "Masukkan pilihan:\n(1) Catat Utang\n(2) Daftar Utang\n(3) Bayar Utang\n"
-                   "(4) Mengurutkan Data Utang\n(5) Mencari Data Utang\n(6) Menghapus Data Utang\n(7) Kembali ke Menu Utama\n");
+                   "(4) Mengurutkan Data Utang\n(5) Mencari Data Utang\n(6) Menghapus Data Utang\n(7) Simulasi Bunga\n(8) Kembali ke Menu Utama\n");
             printf("Pilihan Anda : ");
             scanf("%d", &menu);
             switch(menu)
@@ -376,7 +421,8 @@ int main()
                 case 4: UrutData(); break;
                 case 5: CariData(); break;
                 case 6: HapusData(pilih); break;
-                case 7: filename[strlen(filename)-9] = 0; goto MainMenu; // menghapus UTANG.txt dari filename dan kembali ke menu utama
+                case 7: SimulasiBunga(pilih); break;
+                case 8: filename[strlen(filename)-9] = 0; goto MainMenu; // menghapus UTANG.txt dari filename dan kembali ke menu utama
             }
             filename[strlen(filename)-9] = 0; // menghapus UTANG.txt dari filename
         }
@@ -385,7 +431,7 @@ int main()
             strcat(filename, "PIUTANG.txt"); // membuat nama file khusus piutang
             printf("============================================\n"
                    "Masukkan pilihan:\n(1) Catat Piutang\n(2) Daftar Piutang\n(3) Bayar Piutang\n"
-                   "(4) Mengurutkan Data Piutang\n(5) Mencari Data Piutang\n(6) Menghapus Data Piutang\n(7) Kembali ke Menu Utama\n");
+                   "(4) Mengurutkan Data Piutang\n(5) Mencari Data Piutang\n(6) Menghapus Data Piutang\n(7) Simulasi Bunga\n(8) Kembali ke Menu Utama\n");
             printf("Pilihan Anda : ");
             scanf("%d", &menu);
             switch(menu)
@@ -396,7 +442,8 @@ int main()
                 case 4: UrutData(); break;
                 case 5: CariData(); break;
                 case 6: HapusData(pilih); break;
-                case 7: filename[strlen(filename)-11] = 0; goto MainMenu; // menghapus PIUTANG.txt dari filename dan kembali ke menu utama
+                case 7: SimulasiBunga(pilih); break;
+                case 8: filename[strlen(filename)-11] = 0; goto MainMenu; // menghapus PIUTANG.txt dari filename dan kembali ke menu utama
             }
             filename[strlen(filename)-11] = 0; // menghapus PIUTANG.txt dari filename
         }
