@@ -234,15 +234,17 @@ void UrutData()
 
     fclose(fp); // menutup file
     fp = fopen(filename, "r"); // membuka file dalam mode membaca
-    if(tipe==1) printf("No.\tTanggal Peminjaman\tNama Pemberi Uang\tJumlah Uang\tTenggat Waktu Pelunasan\n");
-    else printf("No.\tTanggal Peminjaman\tNama Peminjam Uang\tJumlah Uang\tTenggat Waktu Pelunasan\n");
+    for(i=0; i<size; i++){
+        if(tipe==1) printf("No.\tTanggal Peminjaman\tNama Pemberi Uang\tJumlah Uang\tTenggat Waktu Pelunasan\n");
+        else printf("No.\tTanggal Peminjaman\tNama Peminjam Uang\tJumlah Uang\tTenggat Waktu Pelunasan\n");
     // membaca file utang/piutang dan menampilkan seluruh isinya
-    while(fscanf(fp, "%d %d %d %s %d %d %d %d", &data.tgl, &data.bln, &data.thn, data.nama, &data.jml, &data.dtgl, &data.dbln, &data.dthn)==8)
+        while(fscanf(fp, "%d %d %d %s %d %d %d %d", &data.tgl, &data.bln, &data.thn, data.nama, &data.jml, &data.dtgl, &data.dbln, &data.dthn)==8)
     {
         i++;
         printf("%-8d%02d/%02d/%-18d%-24s%-16d%02d/%02d/%d\n", i, data.tgl, data.bln, data.thn, data.nama, data.jml, data.dtgl, data.dbln, data.dthn);
     }
 
+    }
     fclose(fp); // menutup file
 }
 
